@@ -3,14 +3,10 @@ package main
 import (
 	"fmt"
 
-	"github.com/robert-min/fastapi-go-grpc-review/lib"
+	"github.com/robert-min/fastapi-go-grpc-review/api"
 )
 
 func main() {
-	token, err := lib.GetOpenaiToken()
-	if err != nil {
-		fmt.Println("Error : ", err)
-	}
-
-	fmt.Println(token)
+	resp := api.GetOpenai("")
+	fmt.Println(resp)
 }
