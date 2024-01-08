@@ -19,8 +19,8 @@ type Config struct {
 	Test   TestConfig   `yaml: "test"`
 }
 
-func readConfigFile() (*Config, error) {
-	yamlFile, err := os.ReadFile("./lib/config/config.yaml")
+func readConfigFile(filePath string) (*Config, error) {
+	yamlFile, err := os.ReadFile(filePath)
 	if err != nil {
 		return nil, err
 	}
@@ -34,8 +34,9 @@ func readConfigFile() (*Config, error) {
 	return &config, nil
 }
 
+// GetOpenaiToken get openai api token.
 func GetOpenaiToken() (string, error) {
-	config, err := readConfigFile()
+	config, err := readConfigFile("./lib/config/config.yaml")
 	if err != nil {
 		return "", err
 	}
