@@ -8,6 +8,7 @@ import (
 	openai "github.com/sashabaranov/go-openai"
 )
 
+// GetOpenai request the content with openai GPT3.5.
 func GetOpenai(content string) string {
 	token, err := lib.GetOpenaiToken()
 	if err != nil {
