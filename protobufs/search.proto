@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+message Search {
+    string username = 1;
+    string content = 2;
+}
+
+message Result {
+    string result = 1;
+}
+
+service SearchService {
+    rpc RequestSearch(Search) returns (Result);
+}
