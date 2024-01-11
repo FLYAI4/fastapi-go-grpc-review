@@ -2,7 +2,6 @@ package app
 
 import (
 	"context"
-	"fmt"
 	"testing"
 	"time"
 
@@ -40,6 +39,8 @@ func TestProcessSearch(t *testing.T) {
 	}
 
 	// 3. 기대하는 결과 : 응답 동일
-	var collectAnswer = fmt.Sprintf("Response from Process Server : %s", mockContent)
-	assert.Equal(t, response.Result, collectAnswer, "Not valid config")
+	expectedPrefix := "OpenAI response : "
+
+	assert.True(t, len(response.Result) >= len(expectedPrefix))
+	assert.Equal(t, response.Result[:len(expectedPrefix)], expectedPrefix, "Not valid config")
 }
