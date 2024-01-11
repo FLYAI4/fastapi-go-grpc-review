@@ -4,5 +4,5 @@ def make_response(result: str) -> dict:
             "code": 200,
             "message": "OK"
         },
-        "data": result
+        "data": str(result)
     }
