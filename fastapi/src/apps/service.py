@@ -1,8 +1,8 @@
 import grpc
 from .schema import SearchPayload
 from libs.exception import UserError
-from generated.search_pb2 import Search
-from generated.search_pb2_grpc import SearchServiceStub
+import generated.search_pb2 as search_pb2
+import generated.search_pb2_grpc as search_pb2_grpc
 
 
 class UserService:
@@ -10,14 +10,15 @@ class UserService:
     def search_openai(self, payload: SearchPayload) -> str:
         if not payload:
             raise UserError(400, "No contents!!")
-
+        
         resp = ""
-        with grpc.insecure_channel('localhost:50051') as channel:
-            stub = SearchServiceStub(channel)
+        with grpc.insecure_channel('localhost:5051') as channel:
+            stub = search_pb2_grpc.SearchServiceStub(channel)
 
-            request = Search(
+            request = search_pb2.Search(
                 username=payload.username,
                 content=payload.content)
             resp = stub.RequestSearch(request)
+            print(resp.result)
 
         return resp
