@@ -27,3 +27,27 @@ func MakeGoroutine(content string) string {
 
 	return content
 }
+
+func process(wg *sync.WaitGroup, ch chan string) {
+	for c := range ch {
+		resp := api.GetOpenai(c)
+		fmt.Printf("go func channel Success : %s \n", resp)
+	}
+	wg.Done()
+}
+
+func MakeChannel(content string) string {
+	var wg sync.WaitGroup
+
+	ch := make(chan string)
+	wg.Add(1)
+
+	go process(&wg, ch)
+
+	ch <- content
+
+	close(ch)
+	wg.Wait()
+
+	return content
+}
