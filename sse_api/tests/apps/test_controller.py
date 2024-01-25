@@ -41,3 +41,14 @@ async def test_user_can_post_save_image_with_valid(client):
     assert response.status_code == 200
     assert response.json()["message"] == "ok"
     assert response.json()["username"] == USERNAME
+
+# TODO : testcode 추가
+# @pytest.mark.asyncio
+# async def test_user_can_get_test_stream():
+#     result = []
+#     async with TestClient(app) as client:
+#         response = await client.get("/stream/text", stream=True)
+#         async for chunck in response.iter_content(10):
+#             result.append(chunck.decode())
+    
+#     assert len(result) == 10

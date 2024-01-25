@@ -2,9 +2,11 @@ from fastapi import APIRouter, UploadFile, File, Header
 from src.libs.exception import CustomHttpException
 from src.apps.service import Service
 from src.libs.util import delete_file
+from fastapi.responses import StreamingResponse
 
 
 user = APIRouter(prefix="/user")
+stream = APIRouter(prefix="/stream")
 
 
 @user.post("/image")
@@ -25,3 +27,15 @@ async def save_image(
         "message": "ok",
         "username": username
     }
+
+
+@stream.get("/text")
+async def send_stream_text_image():
+    return StreamingResponse(Service().send_stream_text(),
+                             media_type="text/event-stream")
+
+
+@stream.get("/text-image")
+async def send_stream_text():
+    return StreamingResponse(Service().send_stream_text_image(),
+                             media_type="text/event-stream")
