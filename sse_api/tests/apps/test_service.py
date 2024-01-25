@@ -4,6 +4,7 @@ from fastapi.testclient import TestClient
 from fastapi import FastAPI, UploadFile, File, Header
 from src.apps.service import Service
 from src.libs.util import delete_file
+import time
 
 apps_path = os.path.abspath(os.path.join(__file__, os.path.pardir))
 tests_path = os.path.abspath(os.path.join(apps_path, os.path.pardir))
@@ -31,13 +32,13 @@ async def create_upload_file(
 
 
 @pytest.mark.asyncio
-async def test_user_service_can_save_image_with_valid():
+async def test_service_can_save_image_with_valid():
     client = TestClient(app)
 
     # given : 유효한 데이터(이미지)
     with open(IMAGE, "rb") as f:
         files = {"file": ("image.jpg", f, "image/jpeg")}
-        # when : DB에 저장
+        # when : 로컬에 저장
         response = client.post("/test/uploadfile/",
                                files=files,
                                headers={"username": USERNAME}
@@ -50,3 +51,25 @@ async def test_user_service_can_save_image_with_valid():
 
     # 생성한 파일 정리
     await delete_file(result)
+
+
+@pytest.mark.asyncio
+async def test_service_can_send_stream_text():
+    # given : 1초 에 한번씩 텍스트 생성
+    async def fake_text_streamer():
+        for i in range(10):
+            yield f"Fake text bytes - {i}".encode()
+            time.sleep(0.5)
+
+    # when : 텍스트 전달(10초)
+    async def create_text_list():
+        result = []
+        async for text in fake_text_streamer():
+            result.append(text.decode())
+        return result
+
+    result = await create_text_list()
+
+    # then : 총 10개의 텍스트 저장
+    assert len(result) == 10
+    assert result[-1] == "Fake text bytes - 9"
