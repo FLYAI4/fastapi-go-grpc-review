@@ -13,5 +13,5 @@ class Service:
 
     async def send_stream_text(self):
         for i in range(10):
-            yield f"Fake text bytes - {i}".encode()
+            yield f"text: Fake text bytes - {i}\n".encode()
             time.sleep(0.5)
