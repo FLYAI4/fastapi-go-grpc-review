@@ -2,7 +2,8 @@ import os
 import pytest
 from fastapi.testclient import TestClient
 from fastapi import FastAPI, UploadFile, File, Header
-from src.libs.util import save_image_local, delete_file
+from src.apps.service import Service
+from src.libs.util import delete_file
 
 apps_path = os.path.abspath(os.path.join(__file__, os.path.pardir))
 tests_path = os.path.abspath(os.path.join(apps_path, os.path.pardir))
@@ -23,14 +24,14 @@ async def create_upload_file(
     file: UploadFile = File(...),
     username: str = Header(default=None)
 ):
-    result = await save_image_local(file, username)
+    result = await Service().save_image(file, username)
     return {
         "file_path": result
     }
 
 
 @pytest.mark.asyncio
-async def test_user_service_can_insert_image_with_valid():
+async def test_user_service_can_save_image_with_valid():
     client = TestClient(app)
 
     # given : 유효한 데이터(이미지)

@@ -1,5 +1,4 @@
 import os
-from datetime import datetime
 from fastapi import UploadFile
 
 
@@ -10,14 +9,18 @@ def create_folder_if_not_exists(folder_path: str) -> str:
     return "Already exist folder."
 
 
-async def save_image_local(image_file: UploadFile, file_name: str) -> str:
+def make_file_name(image_file: UploadFile, username: str):
+    file_extension = image_file.filename.split(".")[-1]
+    return username + "." + file_extension
+
+
+async def save_image_local(image_file: UploadFile, username: str) -> str:
     libs_path = os.path.abspath(os.path.join(__file__, os.path.pardir))
     imgs_path = os.path.abspath(os.path.join(libs_path, "img"))
     create_folder_if_not_exists(imgs_path)
 
-    file_extension = image_file.filename.split(".")[-1]
-    full_file_name = file_name + "." + file_extension
-    user_file_path = os.path.abspath(os.path.join(imgs_path, full_file_name))
+    file_name = make_file_name(image_file, username)
+    user_file_path = os.path.abspath(os.path.join(imgs_path, file_name))
 
     with open(user_file_path, "wb") as f:
         f.write(image_file.file.read())
