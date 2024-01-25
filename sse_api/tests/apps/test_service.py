@@ -55,16 +55,11 @@ async def test_service_can_save_image_with_valid():
 
 @pytest.mark.asyncio
 async def test_service_can_send_stream_text():
-    # given : 1초 에 한번씩 텍스트 생성
-    async def fake_text_streamer():
-        for i in range(10):
-            yield f"Fake text bytes - {i}".encode()
-            time.sleep(0.5)
-
     # when : 텍스트 전달(10초)
     async def create_text_list():
         result = []
-        async for text in fake_text_streamer():
+         # given : 1초 에 한번씩 텍스트 생성
+        async for text in Service().send_stream_text():
             result.append(text.decode())
         return result
 
